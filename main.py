@@ -1,6 +1,8 @@
 import tkinter
 from tkinter import ttk, messagebox
 import mysql.connector
+from datetime import datetime
+from tkcalendar import Calendar
 
 import sv_ttk
 
@@ -88,6 +90,20 @@ ConcentrationCurlLabel.grid(row=12, column=0, padx=10, pady=10)
 ConcentrationCurlEntry = ttk.Entry(root, width=10)
 ConcentrationCurlEntry.grid(row=12, column=1, padx=10, pady=10)
 
+# def selectedDate(event):
+#     selectedDate1 = dateEntry.get_date()
+#     print(selectedDate1)
+
+dateLabel = ttk.Label(root, text="Date: ")
+dateLabel.grid(row=0, column=0, padx=10, pady= 10)
+
+todayDate = datetime.today().strftime('%Y-%m-%d')
+
+
+dateEntry = ttk.Entry(root)
+dateEntry.insert(0, todayDate)
+dateEntry.grid(row=0, column= 1, padx=10, pady=10)
+
 
 #a function to empty the entries after finish submitting
 
@@ -104,7 +120,6 @@ def cleardata():
     HammerCurlEntry.delete(0, tkinter.END)
     ShoulderPressEntry.delete(0, tkinter.END)
     ConcentrationCurlEntry.delete(0, tkinter.END)
-
 
 #Inserting data to the sql database
 
@@ -124,9 +139,10 @@ def submitData():
         HammerCurl = HammerCurlEntry.get()
         ShoulderPress = ShoulderPressEntry.get()
         ConcentrationCurl = ConcentrationCurlEntry.get()
+        date = dateEntry.get()
 
-        insertInto = "INSERT INTO `upperbody`(`Burpees`, `Pushups`, `Bicep Curl`, `Pull Up Bars`, `Front Raises`, `Incline Pushups`, `Decline Pushups`, `Curl`, `Lateral Raises`, `Hammer Curl`, `Shoulder Press`, `Concentration Curl`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        vals = (burpees, pushups, bicepcurl, pullUpBars, frontRaises, inclinedPushUps, declinedPushUps, Curl, LateralRaises, HammerCurl, ShoulderPress, ConcentrationCurl)
+        insertInto = "INSERT INTO `upperbody`(`Date` ,`Burpees`, `Pushups`, `Bicep Curl`, `Pull Up Bars`, `Front Raises`, `Incline Pushups`, `Decline Pushups`, `Curl`, `Lateral Raises`, `Hammer Curl`, `Shoulder Press`, `Concentration Curl`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        vals = (date, burpees, pushups, bicepcurl, pullUpBars, frontRaises, inclinedPushUps, declinedPushUps, Curl, LateralRaises, HammerCurl, ShoulderPress, ConcentrationCurl)
         c.execute(insertInto, vals)
         connection.commit()
         connection.close()
@@ -142,17 +158,17 @@ def submitData():
 #implementing the submitting button 
 
 submit_button = ttk.Button(root,text = "Submit", command=submitData)
-submit_button.grid(row=13, column=1, padx=10, pady=10)
+submit_button.grid(row=14, column=1, padx=10, pady=10)
 
 closebutton = ttk.Button(root, text= "Close", command=root.quit)
-closebutton.grid(row=13, column=0, padx=10, pady=10)
+closebutton.grid(row=14, column=0, padx=10, pady=10)
 
 def navigate():
     root.destroy()
     import menu
 
 navbut = ttk.Button(root, text="Back", command=navigate)
-navbut.grid(row=13, column=2, padx=50, pady=10)
+navbut.grid(row=14, column=2, padx=50, pady=10)
 
 center_window(root)
 
